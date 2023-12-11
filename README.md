@@ -10,12 +10,12 @@ desain figma:
 - https://www.figma.com/file/Ut0uIfEiBLpqwdrXKkiO3y/pondokkos?type=design&node-id=0%3A1&mode=design&t=ae1QYQU6VBZBnYFU-1
 - https://tokyo-free-white-nextjs-js.bloomui.com/management/transactions
 
-- login
+<!-- - login
 - sign up
 - dashboard - admin
 - dashboard - penghuni
 - dashboard - pemilik
-- home - guest
+- home - guest -->
 
 design erd:
 
