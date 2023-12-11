@@ -1,5 +1,5 @@
 import ThemeRegistry from "./themeRegistry"
-// import favicon from './'
+import { NextAuthProvider } from "./provider"
 
 export const metadata = {
   title: 'pondok kos',
@@ -9,8 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body >
-        <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+      <body>
+        <NextAuthProvider>
+          <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+        </NextAuthProvider>
       </body>
     </html>
   )

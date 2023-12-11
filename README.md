@@ -1,6 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
+
+login
+dashboard
+sign up
+logout
+erd
+
+desain figma: 
+https://www.figma.com/file/Ut0uIfEiBLpqwdrXKkiO3y/pondokkos?type=design&node-id=0%3A1&mode=design&t=ae1QYQU6VBZBnYFU-1
+https://tokyo-free-white-nextjs-js.bloomui.com/management/transactions
+  - login
+  - sign up
+
 
 First, run the development server:
 
