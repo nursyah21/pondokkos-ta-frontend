@@ -25,6 +25,7 @@ model Users {
   transaksi Transaksi[] @relation("id_user_transaksi")
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
+  @@index([id_role])
 }
 
 model Role {
@@ -47,6 +48,7 @@ model Kos {
   transaksi Transaksi[]
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+  @@index([id_pemilik])
 }
 
 model Reset_password {
@@ -56,6 +58,7 @@ model Reset_password {
   secret_code String
   id_user     Int
   users       Users    @relation("id_reset_password", fields: [id_user], references: [id])
+  @@index([id_user])
 }
 
 model Penghuni_kos {
@@ -68,6 +71,8 @@ model Penghuni_kos {
   kos      Kos @relation("id_kos", fields: [id_kos], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  @@index([id_user])
+  @@index([id_kos])
 }
 
 model Kunjungan_web {
@@ -84,6 +89,7 @@ model Notification {
   users Users @relation("id_notification", fields: [id_user], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  @@index([id_user])
 }
 
 model Transaksi {
@@ -96,4 +102,5 @@ model Transaksi {
  kos Kos[]
  created_at   DateTime @default(now())
  updated_at   DateTime @updatedAt
+ @@index([id_user])
 }
