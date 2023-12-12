@@ -1,5 +1,10 @@
 ## Getting Started
 
+
+create db:
+- prisma
+
+create ui:
 - login
 - dashboard
 - sign up
@@ -17,7 +22,10 @@ desain figma:
 - dashboard - pemilik
 - home - guest -->
 
-design erd:
+<details>
+  <summary>Click to reveal erd</summary>
+  <img src="assets_img/erd.png" alt="Image of the spoiler">
+</details>
 
 
 <details>
