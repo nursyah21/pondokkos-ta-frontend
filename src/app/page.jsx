@@ -10,32 +10,24 @@ import {
 } from "./ui/components/buttons"
 import { getServerSession } from "next-auth";
 import { authOptions } from "./lib/auth";
+import Home from "./ui/pages/Home";
 
-export default async function Home() {
+export default async function page() {
   const session = await getServerSession(authOptions);
 
   return (
     <>
-      <Box
+    <Home />
+      {/* <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '70vh',
+          minHeight: '100vh',
         }}
       >
-        <div>
-        <LoginButton />
-        
-          {/* <LoginButton />
-          <RegisterButton />
-          <LogoutButton />
-          <ProfileButton />
-           */}
-           
-          <pre>{JSON.stringify(session)}</pre>
-        </div>
-      </Box>
+        adasd
+      </Box> */}
     </>
   )
 }
