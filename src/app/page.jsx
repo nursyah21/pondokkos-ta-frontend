@@ -7,17 +7,20 @@ import {
   RegisterButton,
   LogoutButton,
   ProfileButton
-} from "./ui/components/buttons"
+} from "./components/buttons"
 import { getServerSession } from "next-auth";
 import { authOptions } from "./lib/auth";
-import Home from "./ui/pages/Home";
+
+import Navbar from './components/Navbar'
 
 export default async function page() {
   const session = await getServerSession(authOptions);
 
   return (
     <>
-    <Home />
+    
+    <Navbar />
+    {/* <Home /> */}
       {/* <Box
         sx={{
           display: 'flex',

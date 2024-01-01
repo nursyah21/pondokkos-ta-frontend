@@ -1,5 +1,5 @@
-// import ThemeRegistry from "./themeRegistry"
-// import { NextAuthProvider } from "./provider"
+import ThemeRegistry from "./themeRegistry"
+import { NextAuthProvider } from "./provider"
 
 export const metadata = {
   title: 'pondok kos',
@@ -11,8 +11,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         {/* <NextAuthProvider> */}
-          {/* <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry> */}
-          {children}
+          <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
         {/* </NextAuthProvider> */}
       </body>
     </html>

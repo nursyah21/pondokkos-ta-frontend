@@ -1,6 +1,12 @@
 ## Getting Started
 
 
+-- list kegiatan
+2 jan - 2024
+- register 
+- login
+
+
 create db:
 - prisma
 
