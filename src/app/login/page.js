@@ -4,8 +4,25 @@ import Image from "next/image";
 // import Form from "@/components/form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+// import Link from "next/link";
 import { signIn } from "next-auth/react";
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
+import { styled } from "@mui/material/styles";
+
+const DemoPaper = styled(Paper)(({ theme }) => ({
+    width: 120,
+    height: 120,
+    padding: theme.spacing(2),
+    ...theme.typography.body2,
+    textAlign: 'center',
+}));
 
 export default function Login() {
     const [error, setError] = useState('')
@@ -34,75 +51,30 @@ export default function Login() {
         })
         if (res?.error) return setError(res.error)
         console.log(res)
-        // router.replace('/profile')
     }
     return (
-        
-        <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
-            <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center sm:px-16">
+        <Container>
 
-                    <h3 className="text-xl font-semibold">Sign In</h3>
-                    <p className="text-sm text-gray-500">
-                        Use your email and password to sign in
-                    </p>
-                </div>
-                <form
-                    className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                    onSubmit={handleSubmit}
-                >
-                    {error ? (
-                        <div className="mb-4">
-                            {error}
-                        </div>
-                    ) : null}
-                    <h2 className="text-2xl font-bold mb-4">Sign In</h2>
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="email"
-                        >
-                            email
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            id="email"
-                            name="email"
-                            value={userInfo.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="password"
-                        >
-                            Password
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={userInfo.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            type="submit"
-                        >
-                            Login
-                        </button>
+            <Grid container spacing={2} minHeight={'100vh'}>
+                <Grid xs display="flex" justifyContent="center" alignItems="center">
+                    <Paper sx={{ paddingX: 2, paddingY: 4 }}>
+                        <Typography variant="h4" textAlign={'center'} fontWeight={600} mb={2}>
+                            Sign In
+                        </Typography>
 
-                    </div>
-                </form>
-                {/* <Form type="login" /> */}
-            </div>
-        </div>
+                        <Stack gap={2} minWidth={350} paddingX={2} >
+                            <TextField label="Email" variant="standard" fullWidth/>
+                            <TextField label="Password" variant="standard" fullWidth/>
+                            <Link href="/forget-password" underline="hover">Lupa password?</Link>
+                            <Button variant="contained">SIGN IN</Button>
+                            <Link textAlign={'center'} href="/register" underline="hover">Belum punya akun? Sign up</Link>
+                        </Stack>
+
+                    </Paper>
+                </Grid>
+            </Grid>
+
+
+        </Container>
     );
 }
