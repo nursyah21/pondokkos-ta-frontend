@@ -1,95 +1,81 @@
 "use client"
+
+
 import { useState } from "react";
-import {
-    Box,
-    Button,
-    FormControl,
-    FormLabel,
-    Grid,
-    TextField,
-    Typography,
-    Image,
-} from "@mui/material";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
-function SignUp() {
-    const [nama, setNama] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [konfirmasiPassword, setKonfirmasiPassword] = useState("");
+import { useForm } from "react-hook-form";
 
-    const handleSignUp = (e) => {
-        e.preventDefault();
-        // Implement your signup logic here
-        console.log({ nama, email, password, konfirmasiPassword });
-    };
+
+
+export default function Register() {
+    const [error, setError] = useState('')
+    const [userInfo, setUserInfo] = useState({
+        email: '',
+        password: '',
+    })
+    const router = useRouter()
+    const { email, password } = userInfo
+
+    const handleChange = (event) => {
+        const { name, value } = event.target
+        setUserInfo((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }))
+    }
+
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const onSubmit = (data) => {
+        console.log(data)
+    }
 
     return (
-        <>ads</>
-        // <Box sx={{ backgroundColor: "#F5F5F5", minHeight: "100vh" }}>
-        //     <Grid container justifyContent="center" alignItems="center">
-        //         <Grid item xs={10} sm={7} md={5}>
-        //             <Box sx={{ backgroundColor: "#fff", padding: 3 }}>
-        //                 <Image
-        //                     src="https://i.ibb.co/MGSGvZ1/logo-87-1.png"
-        //                     alt="Logo"
-        //                     sx={{ width: 150, height: 50, mb: 3 }}
-        //                 />
-        //                 <Typography variant="h4" align="center" mb={3}>
-        //                     Sign Up
-        //                 </Typography>
-        //                 <FormControl fullWidth>
-        //                     <FormLabel>Nama</FormLabel>
-        //                     <TextField
-        //                         id="nama"
-        //                         variant="outlined"
-        //                         value={nama}
-        //                         onChange={(e) => setNama(e.target.value)}
-        //                     />
-        //                 </FormControl>
-        //                 <FormControl fullWidth mt={3}>
-        //                     <FormLabel>Email</FormLabel>
-        //                     <TextField
-        //                         id="email"
-        //                         variant="outlined"
-        //                         value={email}
-        //                         onChange={(e) => setEmail(e.target.value)}
-        //                     />
-        //                 </FormControl>
-        //                 <FormControl fullWidth mt={3}>
-        //                     <FormLabel>Password</FormLabel>
-        //                     <TextField
-        //                         id="password"
-        //                         variant="outlined"
-        //                         type="password"
-        //                         value={password}
-        //                         onChange={(e) => setPassword(e.target.value)}
-        //                     />
-        //                 </FormControl>
-        //                 <FormControl fullWidth mt={3}>
-        //                     <FormLabel>Konfirmasi Password</FormLabel>
-        //                     <TextField
-        //                         id="konfirmasiPassword"
-        //                         variant="outlined"
-        //                         type="password"
-        //                         value={konfirmasiPassword}
-        //                         onChange={(e) => setKonfirmasiPassword(e.target.value)}
-        //                     />
-        //                 </FormControl>
-        //                 <Grid container justifyContent="space-between" mt={3}>
-        //                     <Grid item>
-        //                         <Button variant="contained" onClick={handleSignUp}>
-        //                             Daftar Sebagai Penghuni Kos
-        //                         </Button>
-        //                     </Grid>
-        //                     <Grid item>
-        //                         <Typography variant="body2">Sudah punya akun?</Typography>
-        //                     </Grid>
-        //                 </Grid>
-        //             </Box>
-        //         </Grid>
-        //     </Grid>
-        // </Box>
+        <Container>
+            <Grid container spacing={2} minHeight={'100vh'}>
+                <Grid xs display="flex" justifyContent="center" alignItems="center">
+                    <Paper sx={{ paddingX: 2, paddingY: 4 }}>
+                        <Typography variant="h4" textAlign={'center'} fontWeight={600} mb={2}>
+                            Sign Up
+                        </Typography>
+
+                        <Stack component={'form'} gap={2} minWidth={350} paddingX={2} onSubmit={handleSubmit(onSubmit)} >
+                            <TextField label="Nama" variant="standard" {...register('name')} />
+                            <TextField label="Email" variant="standard" {...register('email')} />
+                            <TextField type="password" label="Password" variant="standard" {...register('password')} />
+                            <TextField type="password" label="Konfirmasi Password" variant="standard" {...register('confirm-password')} />
+                            <FormControl>
+                                <InputLabel id="roleId">daftar sebagai</InputLabel>
+                                <Select
+                                    labelId="roleId"
+                                    label='daftar sebagai'
+                                    {...register('role')}
+                                >
+                                    <MenuItem value={2}>Penghuni Kos</MenuItem>
+                                    <MenuItem value={3}>Pemilik Kos</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            <Button type="submit" variant="contained">SIGN UP</Button>
+                            <Link textAlign={'center'} href="/login" underline="hover">Sudah punya akun?</Link>
+                        </Stack>
+
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Container>
     );
 }
-
-export default SignUp;

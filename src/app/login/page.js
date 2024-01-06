@@ -15,14 +15,9 @@ import Stack from '@mui/material/Stack';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import { styled } from "@mui/material/styles";
+import { useForm } from "react-hook-form";
 
-const DemoPaper = styled(Paper)(({ theme }) => ({
-    width: 120,
-    height: 120,
-    padding: theme.spacing(2),
-    ...theme.typography.body2,
-    textAlign: 'center',
-}));
+
 
 export default function Login() {
     const [error, setError] = useState('')
@@ -41,17 +36,12 @@ export default function Login() {
         }))
     }
 
-    const handleSubmit = async (event) => {
-        event.preventDefault()
-        console.log(email, password)
-        const res = await signIn('credentials', {
-            email,
-            password,
-            redirect: false,
-        })
-        if (res?.error) return setError(res.error)
-        console.log(res)
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const onSubmit = (data) => {
+        console.log(data)
     }
+    
+    console.log(watch('email'))
     return (
         <Container>
 
@@ -62,19 +52,17 @@ export default function Login() {
                             Sign In
                         </Typography>
 
-                        <Stack gap={2} minWidth={350} paddingX={2} >
-                            <TextField label="Email" variant="standard" fullWidth/>
-                            <TextField label="Password" variant="standard" fullWidth/>
+                        <Stack component={'form'} gap={2} minWidth={350} paddingX={2} onSubmit={handleSubmit(onSubmit)} >
+                            <TextField label="Email" variant="standard" {...register('email')} />
+                            <TextField type="password" label="Password" variant="standard" {...register('password')} />
                             <Link href="/forget-password" underline="hover">Lupa password?</Link>
-                            <Button variant="contained">SIGN IN</Button>
+                            <Button type="submit" variant="contained">SIGN IN</Button>
                             <Link textAlign={'center'} href="/register" underline="hover">Belum punya akun? Sign up</Link>
                         </Stack>
 
                     </Paper>
                 </Grid>
             </Grid>
-
-
         </Container>
     );
 }
