@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+// import { sign } from "next-auth/react";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -16,31 +16,37 @@ import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import { useForm } from "react-hook-form";
 
 
 
 export default function Register() {
     const [error, setError] = useState('')
-    const [userInfo, setUserInfo] = useState({
-        email: '',
-        password: '',
-    })
+    
     const router = useRouter()
-    const { email, password } = userInfo
 
-    const handleChange = (event) => {
-        const { name, value } = event.target
-        setUserInfo((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }))
-    }
-
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = (data) => {
-        console.log(data)
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+    const onSubmit = async (data, e) => {
+        e.preventDefault();
+        try {
+            console.log(data.email, data.password)
+            const res = await signIn('credentials', {
+                redirect: false,
+                email: data.email,
+                password: data.password
+            })
+            console.log('Res', res)
+            if (!res.error) {
+                router.push('/')
+            } else {
+                setOpen(true)
+                setError('Invalid email or password')
+            }
+        }
+        catch (err) { console.error(err) }
     }
 
     return (
