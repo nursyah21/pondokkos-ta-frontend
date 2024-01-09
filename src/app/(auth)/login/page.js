@@ -16,10 +16,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useForm } from "react-hook-form";
 import AlertError from '@/app/components/AlertError'
+import AlertSuccess from "@/app/components/AlertSuccess";
 
 export default function Login() {
     const [error, setError] = useState('')
+    const [success, setSuccess] = useState()
     const [open, setOpen] = useState(false)
+    const [openSuccess, setOpenSuccess] = useState(false)
 
     const router = useRouter()
 
@@ -43,14 +46,22 @@ export default function Login() {
             }
         }
         catch (err) { console.error(err) }
-
     }
+
+    useEffect(()=>{
+        let notif = localStorage.getItem('successNotif')
+        if(notif){
+            setSuccess(notif)
+            setOpenSuccess(true)
+            localStorage.removeItem('successNotif')
+        }
+    },[])
 
 
     return (
         <Container>
             <AlertError error={error} open={open} setOpen={setOpen} />
-            
+            <AlertSuccess success={success} open={openSuccess} setOpen={setOpenSuccess} />
             <Grid container spacing={2} minHeight={'100vh'}>
                 <Grid xs item display="flex" justifyContent="center" alignItems="center">
                     <Paper sx={{ paddingX: 2, paddingY: 4 }}>

@@ -14,7 +14,7 @@ export default function NotFound() {
         <Grid container spacing={2} minHeight={'80vh'}>
           <Grid xs item display="flex" justifyContent="center" alignItems="center">
             <Stack>
-              <Typography variant='h2'>404 Not Found</Typography>
+              <Typography variant='h2' fontSize={48}>404 Not Found</Typography>
               {/* <Typography>Could not find requested resource</Typography>
             <Button href="/" variant='text'>Return Home</Button> */}
             </Stack>

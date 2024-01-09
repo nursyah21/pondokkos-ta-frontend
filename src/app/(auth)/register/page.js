@@ -48,10 +48,11 @@ export default function Register() {
                 }
             })
             if (res.ok) {
-                setOpenSuccess(true);
-                setTimeout(()=>{
-                    router.push('/login', {data:'success'})
-                }, 2000)
+                // setOpenSuccess(true);
+                localStorage.setItem('successNotif', 'Success create account')
+                router.push('/login', {data:'success'})
+                // setTimeout(()=>{
+                // }, 2000)
                 // signIn()
             } else {
                 setOpen(true)

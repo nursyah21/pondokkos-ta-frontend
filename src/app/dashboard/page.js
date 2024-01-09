@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { signIn, signOut } from "next-auth/react";
@@ -18,7 +18,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { useForm } from "react-hook-form";
 import Drawer from '@/app/components/Drawer';
-
+import AlertSuccess from "../components/AlertSuccess";
 
 export default function Dashboard() {
     const [error, setError] = useState('')
@@ -48,9 +48,14 @@ export default function Dashboard() {
     }
 
 
+    // useEffect(()=>{
+    //     setOpen(true)
+    //     // router.({pathname:'/asdas', query:{data:'adas'}})
+    // },[])
+
     return (
         <Container>
-            {/* <Drawer /> */}
+            {/* <AlertSuccess success={'selamat'} open={open} setOpen={setOpen} /> */}
             <Grid container spacing={2} minHeight={'100vh'}>
                 <Grid xs display="flex" justifyContent="center" alignItems="center">
                     <Stack direction={'column'}>

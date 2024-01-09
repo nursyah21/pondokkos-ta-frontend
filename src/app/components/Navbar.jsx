@@ -167,7 +167,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
                       </IconButton>
                     </Stack>
                     <Stack>
-                      <Typography fontWeight={500}>{session.name}</Typography>
+                      <Typography fontWeight={500}>{session.name.slice(0,10)}</Typography>
                       <Typography fontSize={12}>{session.role}</Typography>
                     </Stack>
                   </Stack>
