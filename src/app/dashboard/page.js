@@ -30,13 +30,12 @@ export default function Dashboard() {
     const onSubmit = async (data, e) => {
         e.preventDefault();
         try {
-            console.log(data.email, data.password)
             const res = await signIn('credentials', {
                 redirect: false,
                 email: data.email,
                 password: data.password
             })
-            console.log('Res', res)
+            
             if (!res.error) {
                 router.push('/')
             } else {
@@ -58,9 +57,9 @@ export default function Dashboard() {
                         <Box>
                             Dashboard
                         </Box>
-                        <Box>
+                        {/* <Box>
                             <Button onClick={signOut}>Sign Out</Button>
-                        </Box>
+                        </Box> */}
                     </Stack>
                 </Grid>
             </Grid>

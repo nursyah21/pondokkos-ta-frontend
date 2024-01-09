@@ -22,10 +22,8 @@ export default async function page() {
 
   if(session){
     user = await getUserData(session.user?.email)
-    console.log(user)
   }
-  console.log(session)
-
+  
   return (
     <> 
       <Home session={user} />

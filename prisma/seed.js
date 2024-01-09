@@ -31,7 +31,6 @@ async function main(){
     console.log({user1})
 }
 
-// console.log('asdsa')
 main()
   .then(() => prisma.$disconnect())
   .catch(async (e) => {

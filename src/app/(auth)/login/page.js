@@ -23,26 +23,20 @@ export default function Login() {
 
     const router = useRouter()
 
-    useEffect(()=>{
-        console.log('asda')
-        if(router.data){
-            console.log(router.data)
-        }
-    },[])
-
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
     const onSubmit = async (data, e) => {
         e.preventDefault();
         try {
-            console.log(data.email, data.password)
+            
             const res = await signIn('credentials', {
                 redirect: false,
                 email: data.email,
                 password: data.password
             })
-            console.log('Res', res)
+            
             if (!res.error) {
                 router.push('/dashboard')
+                router.refresh()
             } else {
                 setOpen(true)
                 setError('Invalid email or password')

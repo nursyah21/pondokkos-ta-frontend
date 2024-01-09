@@ -5,6 +5,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -12,24 +13,40 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
+// import Icon from '@mui/material/Icon';
+// import Icon from '@mui/icons-material';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from '@mui/material/Link';
 import { useRouter, usePathname } from 'next/navigation';
+import { blue } from '@mui/material/colors';
+import { signOut } from "next-auth/react";
+// import { Icon, Stack } from '@mui/material';
+// import { Icon, Stack } from '@mui/material';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Logout'];
 
-function Navbar({hiddenLogin=false, session}) {
+function Navbar({ hiddenLogin = false, session }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [login, setLogin] = React.useState(false)
-  
+  // const [login, setLogin] = React.useState(false)
+  // let login = false
   // const router = useRouter()
   const pathname = usePathname()
-  if(pathname === '/login' || pathname === '/register'){
+  if (pathname === '/login' || pathname === '/register' || pathname === '/dashboard') {
     hiddenLogin = true
   }
+
+  React.useEffect(() => {
+    if (session) {
+      console.log(session)
+      // hiddenLogin = false
+      // setLogin(true)
+    }
+  }, [session, pathname])
   // React.useEffect(()=>{
 
   // },[pathname])
@@ -49,14 +66,13 @@ function Navbar({hiddenLogin=false, session}) {
   };
 
   return (
-    <AppBar position="static" color='inherit' sx={{}}>
+    <AppBar position="static" color='inherit' >
       <Container maxWidth="xl">
-        {console.log(pathname)}
-        <Toolbar disableGutters>
+        <Toolbar >
           <a href="/">
-            <img src="/logo.png" alt="logo" />
+            <img src="/logo.png" alt="logo" width={120} />
           </a>
-          
+
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -74,12 +90,12 @@ function Navbar({hiddenLogin=false, session}) {
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left',
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'left',
+                horizontal: 'right',
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
@@ -110,37 +126,52 @@ function Navbar({hiddenLogin=false, session}) {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            { hiddenLogin ? null :
-              login ? 
+            {session ?
+              // login ?
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
+                <Stack direction={'row'} gap={2}>
+                  <Stack direction={'row'} gap={1}>
+                    <IconButton>
+                      <NotificationsIcon sx={{ color: blue[500] }}></NotificationsIcon>
+                    </IconButton>
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Avatar sx={{ bgcolor: blue[500], width: 36, height: 36 }} alt={session.name} src={session.img} variant='rounded' />
+                    </IconButton>
+                  </Stack>
+                  <Stack>
+                    <Typography fontWeight={500}>{session.name}</Typography>
+                    <Typography fontSize={12}>{session.role}</Typography>
+                  </Stack>
+                </Stack>
               </Tooltip>
-              : <Button href='/login'>Login</Button>
+              : hiddenLogin ? null :
+                <Button href='/login'>Login</Button>
             }
 
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: '38px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
+                vertical: 'bottom',
                 horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
+                vertical: 'bottom',
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Button onClick={signOut} textAlign="center">Logout</Button>
+              </MenuItem>
+              {/* {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
-              ))}
+              ))} */}
             </Menu>
           </Box>
         </Toolbar>
