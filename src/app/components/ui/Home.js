@@ -22,10 +22,6 @@ export default function Home({ session }) {
 
     return (
         <>
-            {session ? router.push('/dashboard')
-                :
-        <>
-            <Navbar />
             <Box >
                 <Grid container spacing={2} minHeight={'80vh'}>
                     <Grid xs item display="flex" justifyContent="center" alignItems="center">
@@ -38,8 +34,7 @@ export default function Home({ session }) {
                     </Grid>
                 </Grid>
             </Box >
-            </>
-            }
+            
         </>
     )
 }

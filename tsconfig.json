@@ -37,7 +37,10 @@
   //   // "**/*.ts",
   //   // "**/*.tsx"
   // ],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/Home.js", "src/app/page.js"],
+  "include": [
+    "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/Home.js", "src/app/page.js",
+    "*/*.ts"
+, "src/app/(auth)/login/layout.js"  ],
   "exclude": [
     "node_modules"
   ]

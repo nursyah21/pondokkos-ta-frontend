@@ -15,14 +15,25 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from '@mui/material/Link';
+import { useRouter, usePathname } from 'next/navigation';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function Navbar({hiddenLogin=false}) {
+function Navbar({hiddenLogin=false, session}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [login, setLogin] = React.useState(false)
+  
+  // const router = useRouter()
+  const pathname = usePathname()
+  if(pathname === '/login' || pathname === '/register'){
+    hiddenLogin = true
+  }
+  // React.useEffect(()=>{
+
+  // },[pathname])
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -30,11 +41,9 @@ function Navbar({hiddenLogin=false}) {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -42,6 +51,7 @@ function Navbar({hiddenLogin=false}) {
   return (
     <AppBar position="static" color='inherit' sx={{}}>
       <Container maxWidth="xl">
+        {console.log(pathname)}
         <Toolbar disableGutters>
           <a href="/">
             <img src="/logo.png" alt="logo" />

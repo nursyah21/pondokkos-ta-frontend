@@ -17,7 +17,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useForm } from "react-hook-form";
 import AlertError from '@/app/components/AlertError'
 
-
 export default function Login() {
     const [error, setError] = useState('')
     const [open, setOpen] = useState(false)
