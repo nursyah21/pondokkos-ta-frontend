@@ -17,9 +17,13 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
+import Icon from '@mui/material/Icon';
 import List from '@mui/material/List';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+// import Icon from '@mui/material/Icon';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
 // import Icon from '@mui/icons-material';
@@ -34,31 +38,33 @@ import { signOut } from "next-auth/react";
 const pages = ['Products', 'Pricing', 'Blog'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const settings = ['Logout'];
-const drawerWidth = 240;
-const navItems = ['Dashboard', 'Data Semua Kos', 'Cari kos', 'Data Pengguna', 'Pengaturan'];
+const drawerWidth = 250;
+
+const navItems = {
+  1: ['Dashboard', 'Data Semua Kos', 'Cari kos', 'Data Pengguna', 'Pengaturan'],
+  2: ['Dashboard', 'Data Kos Saya', 'Cari kos', 'Penghuni', 'Transaksi', 'Pengaturan'],
+  3: ['Dashboard', 'Kos Saya', 'Cari kos', 'Transaksi', 'Pengaturan']
+};
+const navIcons = {
+  1: ['dashboard', 'home', 'search', 'person', 'settings'],
+  2: ['dashboard', 'home', 'search', 'person', 'receipt', 'settings'],
+  3: ['dashboard', 'home', 'search', 'receipt', 'settings']
+};
+const navLinks = {
+  1: ['/', '/kos', '/find', '/users', '/settings'],
+  2: ['/', '/kos', '/find', '/penghuni', '/transaction', '/settings'],
+  3: ['/', '/kos', '/find', '/transaction', '/settings']
+}
 
 function Navbar({ hiddenLogin = false, session }, props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  // const [login, setLogin] = React.useState(false)
-  // let login = false
-  // const router = useRouter()
+  const router = useRouter()
   const { window } = props
   const pathname = usePathname()
   if (pathname === '/login' || pathname === '/register' || pathname === '/dashboard') {
     hiddenLogin = true
   }
-
-  // React.useEffect(() => {
-  //   if (session) {
-  //     console.log(session)
-  //     // hiddenLogin = false
-  //     // setLogin(true)
-  //   }
-  // }, [session, pathname])
-  // React.useEffect(()=>{
-
-  // },[pathname])
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -68,17 +74,26 @@ function Navbar({ hiddenLogin = false, session }, props) {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
+
+  const navItem = navItems[session?.id_role] ?? []
+  const navIcon = navIcons[session?.id_role] ?? []
+  const navLink = navLinks[session?.id_role] ?? []
+
+
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', paddingX: 2, margin: 2 }}>
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', paddingX: 1, margin: 2 }}>
       <Button href='/' sx={{ marginBottom: 2 }} >
         <img src="/logo.png" alt="logo" width={140} />
       </Button>
       <Divider />
       <List>
-        {navItems.map((item) => (
+        {navItem.map((item, idx) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ color: blue[500] }}>
-              <ListItemText primary={item} />
+            <ListItemButton onClick={()=>router.push('/dashboard'+navLink[idx])} sx={{ color: blue[500] }}>
+              <ListItemIcon>
+                <Icon sx={{ color: blue[500] }}>{navIcon[idx]}</Icon>
+              </ListItemIcon>
+              <ListItemText autoCapitalize primary={item} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -121,40 +136,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
               >
                 <MenuIcon />
               </IconButton>
-              {/* <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: 'block', md: 'none' },
-                }}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu> */}
+
             </Box>
             {/* <a href="/">
             <img src="/logo.png" alt="logo" />
