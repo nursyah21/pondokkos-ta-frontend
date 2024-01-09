@@ -24,19 +24,17 @@ export const authOptions = {
                         email,
                     },
                 });
-                // console.info('user:',user, ' pass:',password)
-                let result = (await compare(password, user.password))
-                console.info('user:',user, ' pass:',password, ' res:',result)
-                // if user doesn't exist or password doesn't match
+                
+                
                 if (!user || !(await compare(password, user.password))) {
                     throw new Error("Invalid username or password");
                 }
-                // console.log(new Date(), user)
                 console.log(user)
                 return user;
             },
         }),
     ],
+    middleware: "/api/auth/middleware", 
 };
 
 const handler = NextAuth(authOptions);

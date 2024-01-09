@@ -5,13 +5,15 @@
       "dom.iterable",
       "esnext"
     ],
-    // "paths": {
-    //   "@/components/*": ["components/*"],
-    //   "@/pages/*": ["pages/*"],
-    //   "@/app/*": ["app/*"],
-    //   "@/lib/*": ["lib/*"],
-    //   "@/styles/*": ["styles/*"]
-    // },
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      // "@/components/*": ["components/*"],
+      // "@/pages/*": ["pages/*"],
+      // "@/app/*": ["app/*"],
+      // "@/lib/*": ["lib/*"],
+      // "@/styles/*": ["styles/*"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -29,12 +31,13 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    // "**/*.ts",
-    // "**/*.tsx"
-  ],
+  // "include": [
+  //   "next-env.d.ts",
+  //   ".next/types/**/*.ts",
+  //   // "**/*.ts",
+  //   // "**/*.tsx"
+  // ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/Home.js", "src/app/page.js"],
   "exclude": [
     "node_modules"
   ]
