@@ -19,6 +19,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { useForm } from "react-hook-form";
 import Drawer from '@/app/components/Drawer';
 import AlertSuccess from "../components/AlertSuccess";
+import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function Dashboard() {
     const [error, setError] = useState('')
@@ -35,7 +36,7 @@ export default function Dashboard() {
                 email: data.email,
                 password: data.password
             })
-            
+
             if (!res.error) {
                 router.push('/')
             } else {
@@ -58,13 +59,24 @@ export default function Dashboard() {
             {/* <AlertSuccess success={'selamat'} open={open} setOpen={setOpen} /> */}
             <Grid container spacing={2} minHeight={'100vh'}>
                 <Grid xs display="flex" justifyContent="center" alignItems="center">
-                    <Stack direction={'column'}>
+                    <Stack>
                         <Box>
                             Dashboard
                         </Box>
-                        {/* <Box>
-                            <Button onClick={signOut}>Sign Out</Button>
-                        </Box> */}
+                        <PieChart
+                            series={[
+                                {
+                                    data: [
+                                        { id: 0, value: 10, label: 'series A' },
+                                        { id: 1, value: 15, label: 'series B' },
+                                        { id: 2, value: 20, label: 'series C' },
+                                    ],
+                                },
+                            ]}
+                            width={400}
+                            height={200}
+                        />
+                        
                     </Stack>
                 </Grid>
             </Grid>

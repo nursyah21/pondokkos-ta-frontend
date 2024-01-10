@@ -100,9 +100,11 @@ export default function Page() {
 
         const response = await axios.post('/api/my', data)
         if (response.status == 200) {
-            // let notif = localStorage.setItem('successNotif', 'success edit data')
-            router.refresh()
-            setOpenSuccess(true)
+            localStorage.setItem('successNotif', 'success edit data')
+            // router.prefetch()
+            window.location.reload()
+            // setFinished(false)
+            // setOpenSuccess(true)
 
         } else {
             console.error(response.status)

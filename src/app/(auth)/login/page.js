@@ -48,20 +48,20 @@ export default function Login() {
         catch (err) { console.error(err) }
     }
 
-    useEffect(()=>{
-        let notif = localStorage.getItem('successNotif')
-        if(notif){
-            setSuccess(notif)
-            setOpenSuccess(true)
-            localStorage.removeItem('successNotif')
-        }
-    },[])
+    // useEffect(()=>{
+    //     let notif = localStorage.getItem('successNotif')
+    //     if(notif){
+    //         setSuccess(notif)
+    //         setOpenSuccess(true)
+    //         localStorage.removeItem('successNotif')
+    //     }
+    // },[])
 
 
     return (
         <Container>
             <AlertError error={error} open={open} setOpen={setOpen} />
-            <AlertSuccess success={success} open={openSuccess} setOpen={setOpenSuccess} />
+            <AlertSuccess  open={openSuccess} setOpen={setOpenSuccess} />
             <Grid container spacing={2} minHeight={'100vh'}>
                 <Grid xs item display="flex" justifyContent="center" alignItems="center">
                     <Paper sx={{ paddingX: 2, paddingY: 4 }}>
