@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL('/dashboard', url))
         }
     }else{
-        if(pathname === '/dashboard' ){
+        if(pathname.startsWith('/dashboard')){
             return NextResponse.redirect(new URL('/', url))
         }
     }

@@ -93,7 +93,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
               <ListItemIcon>
                 <Icon sx={{ color: blue[500] }}>{navIcon[idx]}</Icon>
               </ListItemIcon>
-              <ListItemText autoCapitalize primary={item} />
+              <ListItemText primary={item} />
             </ListItemButton>
           </ListItem>
         ))}
