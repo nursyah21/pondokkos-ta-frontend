@@ -18,6 +18,8 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Select from '@mui/material/Select';
+import Pagination from '@mui/material/Pagination';
+import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import AlertError from '@/app/components/AlertError'
@@ -26,33 +28,38 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import { blue } from "@mui/material/colors";
+import useSWRInfinite from 'swr/infinite'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-function useUser() {
-    const { data, error, isLoading } = useSWR('/api/users', fetcher)
-
-    return {
-        data,
-        isLoading,
-        error
-    }
-}
 const colors = [200, 300, 400, 500, 600, 700, 800]
+
+// If `null` is returned, the request of that page won't start.
+const getKey = (pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.length) return null // reached the end
+    return `/users?page=${pageIndex}&take=10`                    // SWR key
+}
 
 export default function Page() {
     const [error, setError] = useState('')
     const [open, setOpen] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 10,
+        page: 1,
+    });
     const router = useRouter()
-
     const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
-    const { data, error: errorswr, isLoading } = useUser()
+    const { data, isLoading, mutate } = useSWR(`/api/users?page=${paginationModel.page}&take=10000`, fetcher);
+    // const { data, size, setSize, isLoading } = useSWRInfinite(
+    //     (index) => `/api/users?take=10&page=${index}`,
+    //     fetcher
+    // );
 
     let rows = []
-    if (data) {
-        rows = data.map((item, idx) => ({
+    if (data?.users) {
+        rows = data.users.map((item, idx) => ({
             id: idx + 1,
             col1: item.name,
             col2: item.email,
@@ -60,7 +67,6 @@ export default function Page() {
             col4: { img: item.url_img, role: item.id_role == 1 ? 'admin' : item.id_role == 2 ? 'penghuni' : 'pemilik' },
         }))
     }
-
 
     const columns = useMemo(() => [
         { field: 'id', headerName: '#', width: 50 },
@@ -72,7 +78,7 @@ export default function Page() {
                 return (
                     <>
                         <IconButton variant="text">
-                            <Avatar sx={{ bgcolor: blue[colors[Math.floor(Math.random() * colors.length)]] }} src={params.value.url_img} />
+                            <Avatar sx={{ bgcolor: blue[colors[Math.floor(Math.random() * colors.length)]] }} src={params.value.img} />
                         </IconButton>
                         {params.value.role}
                     </>
@@ -80,10 +86,37 @@ export default function Page() {
             }
         },
         { field: 'col5', headerName: '', width: 200 },
-        // { field: 'action', headerName: '', width: 200 },
     ], []);
 
-    // router.push('/login', {data:'success'})
+
+
+    const DataPengguna = () => <Paper sx={{ padding: 2 }}>
+        <Grid gap={4} >{
+            isLoading ? <Stack justifyContent={'center'} alignItems={'center'}>
+                < CircularProgress />
+            </Stack > : <>
+                <Typography mb={3} variant="h4">Data Pengguna</Typography>
+                <Divider />
+                <div style={{ height: 480, width: '100%' }}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        loading={isLoading}
+                        paginationModel={paginationModel}
+                        onPaginationModelChange={setPaginationModel}
+                    // hideFooter
+                    // onrow
+                    />
+                </div>
+                {/* <Grid display={'flex'} justifyContent={'center'}>
+                    <Pagination count={10} sx={{ my: 2}} onChange={(e)=>setPaginationModel({e.target.value})}/>
+                </Grid> */}
+            </>
+        }
+        </Grid>
+    </Paper>
+
+
     return (
         <Container>
             <AlertError error={error} open={open} setOpen={setOpen} />
@@ -92,32 +125,14 @@ export default function Page() {
             <Grid my={2} sx={{
                 display: { xs: 'block', sm: 'none' }
             }} >
-                <Grid gap={4} >
-                    <Typography mb={3} variant="h4">Data Pengguna</Typography>
-                    {isLoading ? <Stack justifyContent={'center'} alignItems={'center'}>
-                        <CircularProgress />
-                    </Stack> :
-                        <div style={{ height: 480, width: '100%' }}>
-                            <DataGrid rows={rows} columns={columns} loading={isLoading} />
-                        </div>
-                    }
-                </Grid>
+                <DataPengguna />
             </Grid>
 
             <Grid my={2} ml={30} sx={{
                 display: { xs: 'none', sm: 'block' }
             }} >
-                <Grid >
-                    <Typography mb={3} variant="h4">Data Pengguna</Typography>
-                    {isLoading ? <Stack justifyContent={'center'} alignItems={'center'}>
-                        <CircularProgress />
-                    </Stack> :
-                        <div style={{ height: 480, width: '100%' }}>
-                            <DataGrid rows={rows} columns={columns} loading={isLoading} />
-                        </div>
-                    }
-                </Grid>
+                <DataPengguna />
             </Grid>
-        </Container>
+        </Container >
     );
 }
