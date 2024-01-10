@@ -50,14 +50,14 @@ export async function POST(request) {
     if (session?.user) {
         data = await getUserData(session.user?.email)
         let body = await request.json()
-        // console.log(body)
+        
         let res = await prisma.users.update({
             where: {
                 id: body.id
             },
             data: body
         })
-        console.log(res)
+        
         return NextResponse.json({ success: 'success' })
     }
 

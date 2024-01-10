@@ -29,7 +29,7 @@ export const authOptions = {
                 if (!user || !(await compare(password, user.password))) {
                     throw new Error("Invalid username or password");
                 }
-                console.log(user)
+                
                 return user;
             },
         }),

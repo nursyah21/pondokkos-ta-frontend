@@ -89,7 +89,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
       <List>
         {navItem.map((item, idx) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton onClick={()=>router.push('/dashboard'+navLink[idx])} sx={{ color: blue[500] }}>
+            <ListItemButton href={`/dashboard${navLink[idx]}`}  sx={{ color: blue[500] }}>
               <ListItemIcon>
                 <Icon sx={{ color: blue[500] }}>{navIcon[idx]}</Icon>
               </ListItemIcon>

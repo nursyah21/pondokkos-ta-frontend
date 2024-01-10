@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 // import { NextResponse } from "next/server";
 // import { notFound } from "next/navigation";
 import Notfound from '@/app/not-found'
+import SignOut from '@/app/components/signOut'
 
 async function getUserData(email) {
   const exists = await prisma.users.findFirst({
@@ -40,6 +41,7 @@ export default async function RootLayout({ children }) {
   let user = null
   if (session) {
     user = await getUserData(session.user?.email)
+    if(!user)  return <SignOut />
     user = {
       id: user.id,
       name: user.name,
@@ -52,9 +54,10 @@ export default async function RootLayout({ children }) {
 
   return (
     <>
-      {user?.id_role == 1 ?
-        children : <Notfound />}
+      {children}
+      {/* {user?.id_role == 1 ?
+        children : <Notfound />} */}
     </>
-    
+
   )
 }

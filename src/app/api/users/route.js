@@ -40,8 +40,6 @@ export async function GET(request) {
         if(data.id_role != 1) return NextResponse.json({error:'404 unathorized'})
         data = await getUsers(1,0)
 
-
-        console.log(data)
         return NextResponse.json(data.users)
     }
 

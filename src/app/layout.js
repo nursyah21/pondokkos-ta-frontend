@@ -3,6 +3,7 @@ import ThemeRegistry from "./themeRegistry"
 import Navbar from "@/app/components/Navbar"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import SignOut from "@/app/components/signOut"
 
 export const metadata = {
   title: 'pondok kos',
@@ -24,6 +25,8 @@ export default async function RootLayout({ children }, NextResponse) {
   let user = null
   if (session) {
     user = await getUserData(session.user?.email)
+    
+    if(!user) return <SignOut />
     user = {
       id: user.id,
       name: user.name,

@@ -28,7 +28,7 @@ async function main(){
           id_role: 1
       }
   })
-    console.log({user1})
+    
 }
 
 main()
