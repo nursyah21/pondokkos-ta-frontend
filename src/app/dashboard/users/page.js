@@ -50,10 +50,11 @@ export default function Page() {
         page: 1,
     });
     const [cursorPage, setCursorPage] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
     const router = useRouter()
     const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
-    const { data, isLoading, mutate } = useSWR(`/api/users?page=${cursorPage}&take=10`, fetcher);
+    const { data, isLoading, mutate } = useSWR(`/api/users?page=${cursorPage}&take=${pageSize}`, fetcher);
     // const { data, size, setSize, isLoading } = useSWRInfinite(
     //     (index) => `/api/users?take=10&page=${index}`,
     //     fetcher
@@ -111,10 +112,25 @@ export default function Page() {
                     />
                 </div>
                 <Grid display={'flex'} justifyContent={'right'} mt={2} gap={2}>
-                    <IconButton disabled={!(cursorPage>1)} onClick={()=>setCursorPage(cursorPage-1)}>
+                    <FormControl >
+                        <InputLabel id="demo-simple-select-label">size</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={pageSize}
+                            label="size"
+                            onChange={e=>setPageSize(e.target.value)}
+                        >
+                            {console.log(pageSize)}
+                            <MenuItem value={10}>10</MenuItem>
+                            <MenuItem value={50}>50</MenuItem>
+                            <MenuItem value={100}>100</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <IconButton disabled={!(cursorPage > 1)} onClick={() => setCursorPage(cursorPage - 1)}>
                         <Icon>arrow_back_ios</Icon>
                     </IconButton>
-                    <IconButton disabled={!(data?.hasMore)} onClick={()=>setCursorPage(cursorPage+1)}>
+                    <IconButton disabled={!(data?.hasMore)} onClick={() => setCursorPage(cursorPage + 1)}>
                         <Icon>arrow_forward_ios</Icon>
                     </IconButton>
                 </Grid>
