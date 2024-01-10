@@ -193,7 +193,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Button onClick={signOut} textAlign="center">Logout</Button>
+                  <Button onClick={signOut} >Logout</Button>
                 </MenuItem>
 
               </Menu>

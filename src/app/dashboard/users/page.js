@@ -60,9 +60,9 @@ export default function Page() {
             col4: { img: item.url_img, role: item.id_role == 1 ? 'admin' : item.id_role == 2 ? 'penghuni' : 'pemilik' },
         }))
     }
-    
 
-    const columns = useMemo(()=>[
+
+    const columns = useMemo(() => [
         { field: 'id', headerName: '#', width: 50 },
         { field: 'col1', headerName: 'Name', width: 200 },
         { field: 'col2', headerName: 'Email', width: 200 },
@@ -89,14 +89,18 @@ export default function Page() {
             <AlertError error={error} open={open} setOpen={setOpen} />
             <AlertSuccess success={'Success create account'} open={openSuccess} setOpen={setOpenSuccess} />
 
-            <Grid my={2}  sx={{
+            <Grid my={2} sx={{
                 display: { xs: 'block', sm: 'none' }
             }} >
-                <Grid >
-                    {isLoading && <>Loading...</>}
-                    <div style={{ height: 480, width: '100%' }}>
-                        <DataGrid rows={rows} columns={columns} loading={isLoading} />
-                    </div>
+                <Grid gap={4} >
+                    <Typography mb={3} variant="h4">Data Pengguna</Typography>
+                    {isLoading ? <Stack justifyContent={'center'} alignItems={'center'}>
+                        <CircularProgress />
+                    </Stack> :
+                        <div style={{ height: 480, width: '100%' }}>
+                            <DataGrid rows={rows} columns={columns} loading={isLoading} />
+                        </div>
+                    }
                 </Grid>
             </Grid>
 
@@ -104,10 +108,14 @@ export default function Page() {
                 display: { xs: 'none', sm: 'block' }
             }} >
                 <Grid >
-                    {isLoading && <>Loading...</>}
-                    <div style={{ height: 480, width: '100%' }}>
-                        <DataGrid rows={rows} columns={columns} loading={isLoading} />
-                    </div>
+                    <Typography mb={3} variant="h4">Data Pengguna</Typography>
+                    {isLoading ? <Stack justifyContent={'center'} alignItems={'center'}>
+                        <CircularProgress />
+                    </Stack> :
+                        <div style={{ height: 480, width: '100%' }}>
+                            <DataGrid rows={rows} columns={columns} loading={isLoading} />
+                        </div>
+                    }
                 </Grid>
             </Grid>
         </Container>

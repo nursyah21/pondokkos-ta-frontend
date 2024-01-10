@@ -1,6 +1,6 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -13,41 +13,43 @@ model Users {
   name           String
   email          String           @unique
   password       String
-  url_img        String?
+  url_img        String?          @db.LongText
   no_telp        String?
   no_rek         String?
   reset_password Reset_password[] @relation("id_reset_password")
-  id_role Int
-  role Role @relation("id_role", fields: [id_role], references: [id])
-  notification Notification[] @relation("id_notification")
-  kos Kos[] @relation("id_pemilik_kos")
-  penghuni_kos Penghuni_kos[] @relation("id_user_penghuni_kos")
-  transaksi Transaksi[] @relation("id_user_transaksi")
+  id_role        Int
+  role           Role             @relation("id_role", fields: [id_role], references: [id])
+  notification   Notification[]   @relation("id_notification")
+  kos            Kos[]            @relation("id_pemilik_kos")
+  penghuni_kos   Penghuni_kos[]   @relation("id_user_penghuni_kos")
+  transaksi      Transaksi[]      @relation("id_user_transaksi")
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
+
   @@index([id_role])
 }
 
 model Role {
-  id             Int              @id @default(autoincrement())
-  name           String
-  users Users[] @relation("id_role")
-  created_at     DateTime         @default(now())
-  updated_at     DateTime         @updatedAt
+  id         Int      @id @default(autoincrement())
+  name       String
+  users      Users[]  @relation("id_role")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Kos {
-  id          Int      @id @default(autoincrement())
-  name_kos    String
-  address     String
-  url_img     String
-  description String
-  id_pemilik  Int
-  users       Users    @relation("id_pemilik_kos", fields: [id_pemilik], references: [id])
+  id           Int            @id @default(autoincrement())
+  name_kos     String
+  address      String
+  url_img      String
+  description  String
+  id_pemilik   Int
+  users        Users          @relation("id_pemilik_kos", fields: [id_pemilik], references: [id])
   penghuni_kos Penghuni_kos[] @relation("id_kos")
-  transaksi Transaksi[]
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  transaksi    Transaksi[]
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+
   @@index([id_pemilik])
 }
 
@@ -58,6 +60,7 @@ model Reset_password {
   secret_code String
   id_user     Int
   users       Users    @relation("id_reset_password", fields: [id_user], references: [id])
+
   @@index([id_user])
 }
 
@@ -67,10 +70,11 @@ model Penghuni_kos {
   ruang      String
   id_user    Int
   id_kos     Int
-  users    Users @relation("id_user_penghuni_kos", fields: [id_user], references: [id])
-  kos      Kos @relation("id_kos", fields: [id_kos], references: [id])
+  users      Users    @relation("id_user_penghuni_kos", fields: [id_user], references: [id])
+  kos        Kos      @relation("id_kos", fields: [id_kos], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
   @@index([id_user])
   @@index([id_kos])
 }
@@ -86,21 +90,23 @@ model Notification {
   id         Int      @id @default(autoincrement())
   message    String
   id_user    Int
-  users Users @relation("id_notification", fields: [id_user], references: [id])
+  users      Users    @relation("id_notification", fields: [id_user], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
   @@index([id_user])
 }
 
 model Transaksi {
- id           Int    @id @default(autoincrement())
- status       String
- nominal      Int
- id_user      Int
- users Users @relation("id_user_transaksi", fields: [id_user], references: [id])
- id_kos      Int
- kos Kos[]
- created_at   DateTime @default(now())
- updated_at   DateTime @updatedAt
- @@index([id_user])
+  id         Int      @id @default(autoincrement())
+  status     String
+  nominal    Int
+  id_user    Int
+  users      Users    @relation("id_user_transaksi", fields: [id_user], references: [id])
+  id_kos     Int
+  kos        Kos[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([id_user])
 }
