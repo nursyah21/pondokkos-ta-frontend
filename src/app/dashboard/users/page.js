@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import { blue } from "@mui/material/colors";
 import useSWRInfinite from 'swr/infinite'
+import { Icon } from "@mui/material";
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
@@ -48,10 +49,11 @@ export default function Page() {
         pageSize: 10,
         page: 1,
     });
+    const [cursorPage, setCursorPage] = useState(1)
     const router = useRouter()
     const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
-    const { data, isLoading, mutate } = useSWR(`/api/users?page=${paginationModel.page}&take=10000`, fetcher);
+    const { data, isLoading, mutate } = useSWR(`/api/users?page=${cursorPage}&take=10`, fetcher);
     // const { data, size, setSize, isLoading } = useSWRInfinite(
     //     (index) => `/api/users?take=10&page=${index}`,
     //     fetcher
@@ -102,15 +104,20 @@ export default function Page() {
                         rows={rows}
                         columns={columns}
                         loading={isLoading}
-                        paginationModel={paginationModel}
-                        onPaginationModelChange={setPaginationModel}
-                    // hideFooter
+                        // paginationModel={paginationModel}
+                        // onPaginationModelChange={setPaginationModel}
+                        hideFooter
                     // onrow
                     />
                 </div>
-                {/* <Grid display={'flex'} justifyContent={'center'}>
-                    <Pagination count={10} sx={{ my: 2}} onChange={(e)=>setPaginationModel({e.target.value})}/>
-                </Grid> */}
+                <Grid display={'flex'} justifyContent={'right'} mt={2} gap={2}>
+                    <IconButton disabled={!(cursorPage>1)} onClick={()=>setCursorPage(cursorPage-1)}>
+                        <Icon>arrow_back_ios</Icon>
+                    </IconButton>
+                    <IconButton disabled={!(data?.hasMore)} onClick={()=>setCursorPage(cursorPage+1)}>
+                        <Icon>arrow_forward_ios</Icon>
+                    </IconButton>
+                </Grid>
             </>
         }
         </Grid>
