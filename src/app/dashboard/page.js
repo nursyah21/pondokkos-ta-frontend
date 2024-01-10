@@ -20,10 +20,15 @@ import { useForm } from "react-hook-form";
 import Drawer from '@/app/components/Drawer';
 import AlertSuccess from "../components/AlertSuccess";
 import { PieChart } from '@mui/x-charts/PieChart';
+import useSWR from "swr";
+import Divider from "@mui/material/Divider";
+
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Dashboard() {
-    const [error, setError] = useState('')
+    // const [error, setError] = useState('')
     const [open, setOpen] = useState(false)
+    const [pieChart, setPieChart] = useState([])
 
     const router = useRouter()
 
@@ -45,40 +50,69 @@ export default function Dashboard() {
             }
         }
         catch (err) { console.error(err) }
-
     }
 
+    const { data, error, isLoading } = useSWR('/api/chart', fetcher)
 
-    // useEffect(()=>{
-    //     setOpen(true)
-    //     // router.({pathname:'/asdas', query:{data:'adas'}})
-    // },[])
+    // if (data && !isLoading) {
+    //     // console.log(data)
+    //     setPieChart([
+    //         {
+    //             data: [
+    //                 { id: 0, value: 10, label: 'admin' },
+    //                 { id: 1, value: 20, label: 'penghuni' },
+    //                 { id: 2, value: 30, label: 'pemilik' },
+    //             ],
+    //         },
+    //     ])
+    // }
 
-    return (
-        <Container>
-            {/* <AlertSuccess success={'selamat'} open={open} setOpen={setOpen} /> */}
-            <Grid container spacing={2} minHeight={'100vh'}>
-                <Grid xs display="flex" justifyContent="center" alignItems="center">
-                    <Stack>
-                        <Box>
-                            Dashboard
-                        </Box>
+    const MyChart = () =>
+        <Paper sx={{ padding: 4 }}>
+            <Stack>
+                <Box my={2}>
+                    <Typography variant="h4">
+                        Dashboard
+                    </Typography>
+                    <Divider />
+                </Box>
+                {isLoading ? <CircularProgress /> :
+                    data ?
                         <PieChart
                             series={[
                                 {
                                     data: [
-                                        { id: 0, value: 10, label: 'series A' },
-                                        { id: 1, value: 15, label: 'series B' },
-                                        { id: 2, value: 20, label: 'series C' },
+                                        { id: 0, value: data?.admin, label: `admin (${data?.admin})` },
+                                        { id: 1, value: data?.penghuni, label: `penghuni (${data?.penghuni})` },
+                                        { id: 2, value: data?.pemilik, label: `pemilik (${data?.pemilik})` },
                                     ],
                                 },
                             ]}
                             width={400}
                             height={200}
-                        />
-                        
-                    </Stack>
-                </Grid>
+                        /> : null
+                }
+
+            </Stack>
+        </Paper>
+
+
+    // if(isLoading) return <CircularProgress />
+    return (
+        <Container>
+            {/* <AlertSuccess success={'selamat'} open={open} setOpen={setOpen} /> */}
+            {/* {
+                isLoading && <CircularProgress />
+            } */}
+            <Grid my={2} ml={30} sx={{
+                display: { xs: 'none', sm: 'block' }
+            }} >
+                <MyChart />
+            </Grid>
+            <Grid my={2} sx={{
+                display: { xs: 'block', sm: 'none' }
+            }} >
+                <MyChart />
             </Grid>
         </Container>
     );
