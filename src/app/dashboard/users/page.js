@@ -1,7 +1,7 @@
 "use client"
 
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Container from '@mui/material/Container';
@@ -38,6 +38,7 @@ function useUser() {
         error
     }
 }
+const colors = [200, 300, 400, 500, 600, 700, 800]
 
 export default function Page() {
     const [error, setError] = useState('')
@@ -49,44 +50,38 @@ export default function Page() {
 
     const { data, error: errorswr, isLoading } = useUser()
 
-
-
-    // const rows = data [
-    //     { id: 1, col1: 'Hello', col2: 'World' },
-    //     { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-    //     { id: 3, col1: 'MUI', col2: 'is Amazing' },
-    // ];
     let rows = []
     if (data) {
         rows = data.map((item, idx) => ({
-            id: idx+1,
+            id: idx + 1,
             col1: item.name,
             col2: item.email,
-            col3: item.id_role == 1 ? 'admin' : item.id_role == 2 ? 'penghuni' : 'pemilik',
-            col4: {img: item.url_img},
+            col3: item.no_telp ?? 'tidak tersedia',
+            col4: { img: item.url_img, role: item.id_role == 1 ? 'admin' : item.id_role == 2 ? 'penghuni' : 'pemilik' },
         }))
     }
+    
 
-    const colors = [200,300,400,500,600,700,800]
-
-    const columns = [
+    const columns = useMemo(()=>[
         { field: 'id', headerName: '#', width: 50 },
         { field: 'col1', headerName: 'Name', width: 200 },
         { field: 'col2', headerName: 'Email', width: 200 },
-        { field: 'col3', headerName: 'Role', width: 200 },
-        { field: 'col4', headerName: '', width: 200,  renderCell: (params) => {
-            return (
-              <>
-              <IconButton variant="text">
-                <Avatar sx={{bgcolor: blue[colors[Math.floor(Math.random() * colors.length)]]}} src={params.value.url_img} />
-              </IconButton>
-                {/* {params.value.username} */}
-              </>
-            )} 
+        { field: 'col3', headerName: 'No telp', width: 200 },
+        {
+            field: 'col4', headerName: '', width: 200, renderCell: (params) => {
+                return (
+                    <>
+                        <IconButton variant="text">
+                            <Avatar sx={{ bgcolor: blue[colors[Math.floor(Math.random() * colors.length)]] }} src={params.value.url_img} />
+                        </IconButton>
+                        {params.value.role}
+                    </>
+                )
+            }
         },
         { field: 'col5', headerName: '', width: 200 },
         // { field: 'action', headerName: '', width: 200 },
-    ];
+    ], []);
 
     // router.push('/login', {data:'success'})
     return (
@@ -94,16 +89,25 @@ export default function Page() {
             <AlertError error={error} open={open} setOpen={setOpen} />
             <AlertSuccess success={'Success create account'} open={openSuccess} setOpen={setOpenSuccess} />
 
-            <Grid my={2} ml={30}>
+            <Grid my={2}  sx={{
+                display: { xs: 'block', sm: 'none' }
+            }} >
                 <Grid >
                     {isLoading && <>Loading...</>}
-                    {/* {data && console.log('=>', data)} */}
-                    {/* {!isLoading && */}
-                        <div style={{ height: 480, width: '100%' }}>
-                            <DataGrid rows={rows} columns={columns} loading={isLoading} />
-                        </div>
-                    {/* } */}
-                    {/* {data && console.log('..',data)} */}
+                    <div style={{ height: 480, width: '100%' }}>
+                        <DataGrid rows={rows} columns={columns} loading={isLoading} />
+                    </div>
+                </Grid>
+            </Grid>
+
+            <Grid my={2} ml={30} sx={{
+                display: { xs: 'none', sm: 'block' }
+            }} >
+                <Grid >
+                    {isLoading && <>Loading...</>}
+                    <div style={{ height: 480, width: '100%' }}>
+                        <DataGrid rows={rows} columns={columns} loading={isLoading} />
+                    </div>
                 </Grid>
             </Grid>
         </Container>
