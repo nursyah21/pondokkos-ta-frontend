@@ -38,8 +38,9 @@ export default function Login() {
             })
             
             if (!res.error) {
-                router.push('/dashboard')
-                router.refresh()
+                window.location.href = '/dashboard'
+                // router.push('/dashboard')
+                // router.refresh()
             } else {
                 setOpen(true)
                 setError('Invalid email or password')
@@ -47,15 +48,6 @@ export default function Login() {
         }
         catch (err) { console.error(err) }
     }
-
-    // useEffect(()=>{
-    //     let notif = localStorage.getItem('successNotif')
-    //     if(notif){
-    //         setSuccess(notif)
-    //         setOpenSuccess(true)
-    //         localStorage.removeItem('successNotif')
-    //     }
-    // },[])
 
 
     return (

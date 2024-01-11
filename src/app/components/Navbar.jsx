@@ -89,7 +89,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
       <List>
         {navItem.map((item, idx) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton href={`/dashboard${navLink[idx]}`}  sx={{ color: blue[500] }}>
+            <ListItemButton href={`/dashboard${navLink[idx]}`} sx={{ color: blue[500] }}>
               <ListItemIcon>
                 <Icon sx={{ color: blue[500] }}>{navIcon[idx]}</Icon>
               </ListItemIcon>
@@ -167,7 +167,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
                       </IconButton>
                     </Stack>
                     <Stack>
-                      <Typography fontWeight={500}>{session.name.slice(0,10)}</Typography>
+                      <Typography fontWeight={500}>{session.name.slice(0, 10)}</Typography>
                       <Typography fontSize={12}>{session.role}</Typography>
                     </Stack>
                   </Stack>
@@ -193,7 +193,10 @@ function Navbar({ hiddenLogin = false, session }, props) {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Button onClick={signOut} >Logout</Button>
+                  <Button onClick={() => {
+                    signOut()
+                    window.location.reload()
+                  }}>Logout</Button>
                 </MenuItem>
               </Menu>
             </Box>

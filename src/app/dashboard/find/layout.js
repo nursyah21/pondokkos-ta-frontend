@@ -52,7 +52,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <>
-      {user?.id_role == 3 ?
+      {session ?
         children : <Notfound />}
     </>
     

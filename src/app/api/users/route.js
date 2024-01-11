@@ -38,7 +38,7 @@ export async function GET(request) {
         if(!page) page = 1
 
         data = await getUserData(session.user?.email)
-        if (data.id_role != 3) return NextResponse.json({ error: '404 unathorized' })
+        if (data.id_role != 1) return NextResponse.json({ error: '404 unathorized' })
         // console.log('-', page, take)
         data = await getUsersPag(page,take)
         // console.log(request)
