@@ -28,6 +28,7 @@ import CardContent from "@mui/material/CardContent";
 import CircularProgress from '@mui/material/CircularProgress';
 import AlertError from '@/app/components/AlertError'
 import AlertSuccess from '@/app/components/AlertSuccess'
+import SearchIcon from '@mui/icons-material/Search';
 import { DataGrid } from '@mui/x-data-grid';
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -35,6 +36,8 @@ import { blue } from "@mui/material/colors";
 import useSWRInfinite from 'swr/infinite'
 import { MuiFileInput } from "mui-file-input";
 import { Icon } from "@mui/material";
+// import SearchBar from "material-ui-search-bar";
+import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
 
 const getBase64 = (file) => new Promise((resolve, reject) => {
@@ -48,11 +51,41 @@ const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const colors = [200, 300, 400, 500, 600, 700, 800]
 
+// function SearchBar({setData, data}) {
+//     const handleSubmit = (event) => {
+//         // console.log(event.keyCode)
+//         if(event.key === 'Enter'){
+//             const searchQuery = event.target.value;
+//             console.log(searchQuery);
+//             setData(searchQuery)
+//         }
+//     };
+
+//     return (
+//       <TextField
+//         type="text"
+//         placeholder="tulis nama kos"
+//         onKeyDown={handleSubmit}
+
+//         fullWidth
+//         InputProps={{
+//           startAdornment: (
+//             <InputAdornment position="start">
+//               <SearchIcon />
+//             </InputAdornment>
+//           ),
+//         }}
+//       />
+//     );
+//   }
+
 // If `null` is returned, the request of that page won't start.
 const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.length) return null // reached the end
     return `/users?page=${pageIndex}&take=10`                    // SWR key
 }
+
+
 
 function MediaCard({ url_img, name, description, id, address }) {
     return (
@@ -74,32 +107,32 @@ function MediaCard({ url_img, name, description, id, address }) {
                         <Typography variant="body2" color="text.secondary">
                             description: {description}
                         </Typography>
-
                         <Typography variant="body2" color="text.secondary">
                             alamat: {address}
                         </Typography>
                     </CardContent>
 
 
-                    <CardActions>
+                    {/* <CardActions>
                         <Button size="small">Edit</Button>
                         <Button size="small">Delete</Button>
-                    </CardActions>
-
-
+                    </CardActions> */}
                 </Grid>
-
 
             </Grid>
         </Card>
     );
 }
 
+
 export default function Page() {
     const [error, setError] = useState('')
     const [open, setOpen] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
     const [openCreateKos, setOpenCreateKos] = useState(false)
+    const [dataResult, setDataResult] = useState(null)
+    const [loadingResult, setLoadingResult] = useState(false)
+    // const [dataResult, setDataResult] = useState([])
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 10,
         page: 1,
@@ -109,6 +142,7 @@ export default function Page() {
     const router = useRouter()
     const [file, setFile] = useState(null)
     const [fileBase64, setFileBase64] = useState(null)
+    const [search, setSearch] = useState(null)
 
     const handleChange = async (newFile) => {
         console.log('asdsad')
@@ -126,8 +160,47 @@ export default function Page() {
         setFile(newFile)
     }
 
-    const { data: dataPemilik, isLoading } = useSWR('/api/my', fetcher)
-    const { data: dataKos, isLoading: isLoadingKos } = useSWR('/api/kos', fetcher)
+    const { data, isLoading } = useSWR('/api/find', fetcher)
+    // const { data: dataKos, isLoading: isLoadingKos } = useSWR('/api/kos', fetcher)
+
+    const SearchBar = () => {
+        const handleSubmit = async (event) => {
+            // console.log(event.keyCode)
+            if (event.key === 'Enter') {
+                const searchQuery = event.target.value;
+                setLoadingResult(true)
+                const response = await axios.get(`/api/find?q=${searchQuery}`)
+
+                if (response.status == 200) {
+                    // localStorage.setItem('successNotif', 'success menambahkan data')
+                    // window.location.reload()
+                    // console.log('asd',response.data)
+                    setDataResult(response.data)
+                    // console.log(dataResult)
+                } else {
+                    setDataResult(null)
+                }
+                setLoadingResult(false)
+            }
+        };
+
+        return (
+            <TextField
+                type="text"
+                placeholder="tulis nama kos"
+                onKeyDown={handleSubmit}
+
+                fullWidth
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <SearchIcon />
+                        </InputAdornment>
+                    ),
+                }}
+            />
+        );
+    }
 
 
     const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -145,82 +218,34 @@ export default function Page() {
         if (response.status == 200) {
             localStorage.setItem('successNotif', 'success menambahkan data')
             window.location.reload()
-
         } else {
             setOpen(true)
             setError('gagal Menambahkan data')
         }
-
     }
 
-    const DataKos = () => isLoading ? <Stack justifyContent={'center'} alignItems={'center'}>
-        <CircularProgress />
-    </Stack> :
+
+    const DataKos = () =>
         <Paper sx={{ padding: 2 }}>
             <Grid gap={4} >
 
-                <Typography variant="h4">Data Kos Saya</Typography>
+                <Typography variant="h4">Cari Kos</Typography>
                 <Divider mb={3} />
-                {
-                    !openCreateKos ?
-                        <>
-                            <Stack my={3} >
-                                <Stack direction="row" justifyContent="flex-end">
-                                    <Button onClick={() => setOpenCreateKos(!openCreateKos)} sx={{ width: 200 }} variant="contained">Tambahkan kos</Button>
-                                </Stack>
-                                <Stack>
-                                    {
-                                        isLoadingKos ? <Stack justifyContent={'center'} alignItems={'center'}>
-                                            <CircularProgress />
-                                        </Stack> : dataKos.map(kos => (
-                                            <MediaCard key={kos.id} id={kos.id} name={kos.name_kos} description={kos.description} url_img={kos.url_img} address={kos.address} />
-                                        ))
-                                    }
-
-                                </Stack>
-                            </Stack>
-                        </>
-                        :
-                        <Paper sx={{ marginTop: 4, padding: 2 }}>
-                            <Stack direction="row" justifyContent="flex-end">
-                                <IconButton onClick={() => setOpenCreateKos(!openCreateKos)} >
-                                    <Icon>close</Icon>
-                                </IconButton>
-                            </Stack>
-                            <Stack method="post" component={'form'} gap={2} minWidth={350} paddingX={2} onSubmit={handleSubmit(onSubmit)} >
-                                <CardMedia>
-                                    {fileBase64 &&
-                                        <img alt="" src={fileBase64} width={280} height={200} />
-                                    }
-                                </CardMedia>
-                                <Typography variant="h6" >Tambahkan Data Kos</Typography>
-                                <TextField label="Nama kos" variant="standard" {...register('name_kos', { required: true })} />
-                                {errors.name && <Typography fontSize={15} color={"error"}>Nama kos is required</Typography>}
-
-                                <TextField label="Alamat" variant="standard" {...register('address', { required: true })} />
-                                {errors.address && <Typography fontSize={15} color={"error"}>Alamat is required</Typography>}
-
-                                <TextField label="Deskripsi kos" variant="standard" {...register('description', { required: true })} />
-                                {errors.description && <Typography fontSize={15} color={"error"}>Alamat is required</Typography>}
-
-                                <MuiFileInput
-                                    label='image'
-                                    placeholder="place your image"
-                                    inputProps={{ accept: '.png, .jpeg, .jpg' }}
-                                    value={file}
-                                    onChange={handleChange}
-                                    clearIconButtonProps={{
-                                        title: "Remove",
-                                        children: <Icon fontSize="small" >close</Icon>
-                                    }} />
-
-                                <Button disabled={isSubmitting} type="submit" variant="contained">Submit
-                                    {isSubmitting && <CircularProgress sx={{ marginLeft: 2 }} size={'1rem'} color="inherit" />}
-                                </Button>
-                            </Stack>
-                        </Paper>
-                }
-
+                <Stack my={2} gap={2}>
+                    <SearchBar setData={setSearch} />
+                    {(isLoading || loadingResult) ?
+                        <Stack justifyContent={'center'} alignItems={'center'}>
+                            <CircularProgress />
+                        </Stack> :
+                        dataResult ?
+                            dataResult?.map(e => (
+                                <MediaCard key={e.id} url_img={e.url_img} name={e.name_kos} description={e.address} id={e.id} address={e.address} />
+                            )) :
+                            data.res?.map(e => (
+                                <MediaCard key={e.id} url_img={e.url_img} name={e.name_kos} description={e.address} id={e.id} address={e.address} />
+                            ))
+                    }
+                </Stack>
             </Grid>
         </Paper>
 
