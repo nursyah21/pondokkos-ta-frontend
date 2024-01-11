@@ -42,15 +42,6 @@ const getBase64 = (file) => new Promise((resolve, reject) => {
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-function useUser() {
-    const { data, error, isLoading } = useSWR('/api/my', fetcher)
-
-    return {
-        data,
-        isLoading,
-        error
-    }
-}
 const colors = [200, 300, 400, 500, 600, 700, 800]
 const formData = new FormData()
 
@@ -63,7 +54,7 @@ export default function Page() {
 
     const { control, register, watch, setValue, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
-    const { data, error: errorswr, isLoading } = useUser()
+    const { data, isLoading } = useSWR('/api/my', fetcher)
 
     useEffect(() => {
 
@@ -128,9 +119,7 @@ export default function Page() {
 
                 <TextField type="email" variant="standard" label="email" {...register('email', { required: true })} />
                 {errors.email && <Typography fontSize={15} color={"error"}>Email address is required</Typography>}
-                {/* <TextField type="password" variant="standard" label="password" {...register('password', { required: true, minLength: 8 })} />
-            {errors.password?.type === 'required' && <Typography fontSize={15} color={"error"}>Password is required</Typography>}
-            {errors.password?.type === 'minLength' && <Typography fontSize={15} color={"error"}>Password min length 8</Typography>} */}
+                
 
                 <FormControl disabled={data?.id_role != 1}>
                     <InputLabel id="roleId">daftar sebagai</InputLabel>
@@ -154,7 +143,7 @@ export default function Page() {
                 <MuiFileInput
                     label='image'
                     placeholder="place your image"
-                    inputProps={{ accept: '.png, .jpeg' }}
+                    inputProps={{ accept: '.png, .jpeg, .jpg' }}
                     value={file}
                     onChange={handleChange}
                     clearIconButtonProps={{

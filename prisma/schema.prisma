@@ -41,7 +41,7 @@ model Kos {
   id           Int            @id @default(autoincrement())
   name_kos     String
   address      String
-  url_img      String
+  url_img      String         @db.LongText
   description  String
   id_pemilik   Int
   users        Users          @relation("id_pemilik_kos", fields: [id_pemilik], references: [id])

@@ -42,18 +42,18 @@ const drawerWidth = 250;
 
 const navItems = {
   1: ['Dashboard', 'Data Semua Kos', 'Cari kos', 'Data Pengguna', 'Pengaturan'],
-  2: ['Dashboard', 'Data Kos Saya', 'Cari kos', 'Penghuni', 'Transaksi', 'Pengaturan'],
-  3: ['Dashboard', 'Kos Saya', 'Cari kos', 'Transaksi', 'Pengaturan']
+  2: ['Dashboard', 'Kos Saya', 'Cari kos', 'Transaksi', 'Pengaturan'],
+  3: ['Dashboard', 'Data Kos Saya', 'Cari kos', 'Penghuni', 'Transaksi', 'Pengaturan']
 };
 const navIcons = {
   1: ['dashboard', 'home', 'search', 'person', 'settings'],
-  2: ['dashboard', 'home', 'search', 'person', 'receipt', 'settings'],
-  3: ['dashboard', 'home', 'search', 'receipt', 'settings']
+  2: ['dashboard', 'home', 'search', 'receipt', 'settings'],
+  3: ['dashboard', 'home', 'search', 'person', 'receipt', 'settings']
 };
 const navLinks = {
   1: ['/', '/kos', '/find', '/users', '/settings'],
-  2: ['/', '/kos', '/find', '/penghuni', '/transaction', '/settings'],
-  3: ['/', '/kos', '/find', '/transaction', '/settings']
+  2: ['/', '/kos', '/find', '/transaction', '/settings'],
+  3: ['/', '/kos', '/find', '/penghuni', '/transaction', '/settings'],
 }
 
 function Navbar({ hiddenLogin = false, session }, props) {
@@ -195,7 +195,6 @@ function Navbar({ hiddenLogin = false, session }, props) {
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Button onClick={signOut} >Logout</Button>
                 </MenuItem>
-
               </Menu>
             </Box>
           </Toolbar>

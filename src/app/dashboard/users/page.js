@@ -55,10 +55,6 @@ export default function Page() {
     const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
     const { data, isLoading, mutate } = useSWR(`/api/users?page=${cursorPage}&take=${pageSize}`, fetcher);
-    // const { data, size, setSize, isLoading } = useSWRInfinite(
-    //     (index) => `/api/users?take=10&page=${index}`,
-    //     fetcher
-    // );
 
     let rows = []
     if (data?.users) {
@@ -80,7 +76,7 @@ export default function Page() {
             field: 'col4', headerName: '', width: 200, renderCell: (params) => {
                 return (
                     <>
-                        <IconButton variant="text">
+                        <IconButton variant="text" onClick={e=>console.log()}>
                             <Avatar sx={{ bgcolor: blue[colors[Math.floor(Math.random() * colors.length)]] }} src={params.value.img} />
                         </IconButton>
                         {params.value.role}
@@ -105,10 +101,7 @@ export default function Page() {
                         rows={rows}
                         columns={columns}
                         loading={isLoading}
-                        // paginationModel={paginationModel}
-                        // onPaginationModelChange={setPaginationModel}
                         hideFooter
-                    // onrow
                     />
                 </div>
                 <Grid display={'flex'} justifyContent={'right'} mt={2} gap={2}>
