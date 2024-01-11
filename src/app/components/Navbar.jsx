@@ -193,10 +193,7 @@ function Navbar({ hiddenLogin = false, session }, props) {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Button onClick={() => {
-                    signOut()
-                    window.location.reload()
-                  }}>Logout</Button>
+                  <Button onClick={() => signOut()}>Logout</Button>
                 </MenuItem>
               </Menu>
             </Box>
@@ -237,36 +234,9 @@ function Navbar({ hiddenLogin = false, session }, props) {
             {drawer}
           </Drawer>
         </Box>
-        // <Drawer
-        //   sx={{
-        //     display: { xs: 'block', sm: 'block' },
-
-        //   }}
-        //   anchor={'left'}
-        //   variant='persistent'
-        //   open={true}
-        //   onClose={() => { }}
-        // >
-        //   {drawer}
-        //   {/* {list(anchor)} */}
-        // </Drawer>
+        
       }
-      {/* <Drawer
-          container={container}
-          variant="temporary"
-          open={true}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer> */}
-      {/* </nav> */}
+      
     </>
   );
 }

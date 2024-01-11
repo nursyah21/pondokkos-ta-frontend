@@ -51,33 +51,6 @@ const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const colors = [200, 300, 400, 500, 600, 700, 800]
 
-// function SearchBar({setData, data}) {
-//     const handleSubmit = (event) => {
-//         // console.log(event.keyCode)
-//         if(event.key === 'Enter'){
-//             const searchQuery = event.target.value;
-//             console.log(searchQuery);
-//             setData(searchQuery)
-//         }
-//     };
-
-//     return (
-//       <TextField
-//         type="text"
-//         placeholder="tulis nama kos"
-//         onKeyDown={handleSubmit}
-
-//         fullWidth
-//         InputProps={{
-//           startAdornment: (
-//             <InputAdornment position="start">
-//               <SearchIcon />
-//             </InputAdornment>
-//           ),
-//         }}
-//       />
-//     );
-//   }
 
 // If `null` is returned, the request of that page won't start.
 const getKey = (pageIndex, previousPageData) => {
@@ -142,10 +115,8 @@ export default function Page() {
     const router = useRouter()
     const [file, setFile] = useState(null)
     const [fileBase64, setFileBase64] = useState(null)
-    const [search, setSearch] = useState(null)
 
     const handleChange = async (newFile) => {
-        console.log('asdsad')
         if (newFile?.size > 1024 * 200) {
             setError('max file size 200kb')
             setOpen(true)
@@ -161,22 +132,17 @@ export default function Page() {
     }
 
     const { data, isLoading } = useSWR('/api/find', fetcher)
+    const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
     // const { data: dataKos, isLoading: isLoadingKos } = useSWR('/api/kos', fetcher)
 
     const SearchBar = () => {
         const handleSubmit = async (event) => {
-            // console.log(event.keyCode)
             if (event.key === 'Enter') {
-                const searchQuery = event.target.value;
                 setLoadingResult(true)
-                const response = await axios.get(`/api/find?q=${searchQuery}`)
+                const response = await axios.get(`/api/find?q=${watch('searchbar')}`)
 
                 if (response.status == 200) {
-                    // localStorage.setItem('successNotif', 'success menambahkan data')
-                    // window.location.reload()
-                    // console.log('asd',response.data)
                     setDataResult(response.data)
-                    // console.log(dataResult)
                 } else {
                     setDataResult(null)
                 }
@@ -189,7 +155,7 @@ export default function Page() {
                 type="text"
                 placeholder="tulis nama kos"
                 onKeyDown={handleSubmit}
-
+                {...register('searchbar')}
                 fullWidth
                 InputProps={{
                     startAdornment: (
@@ -203,7 +169,7 @@ export default function Page() {
     }
 
 
-    const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+    
     const onSubmit = async (data, e) => {
         e.preventDefault()
         if (!fileBase64) {
@@ -232,7 +198,7 @@ export default function Page() {
                 <Typography variant="h4">Cari Kos</Typography>
                 <Divider mb={3} />
                 <Stack my={2} gap={2}>
-                    <SearchBar setData={setSearch} />
+                    <SearchBar />
                     {(isLoading || loadingResult) ?
                         <Stack justifyContent={'center'} alignItems={'center'}>
                             <CircularProgress />

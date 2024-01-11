@@ -39,8 +39,6 @@ export default function Login() {
             
             if (!res.error) {
                 window.location.href = '/dashboard'
-                // router.push('/dashboard')
-                // router.refresh()
             } else {
                 setOpen(true)
                 setError('Invalid email or password')
