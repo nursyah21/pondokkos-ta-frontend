@@ -22,6 +22,9 @@ import Pagination from '@mui/material/Pagination';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import CardMedia from '@mui/material/CardMedia';
+import Card from '@mui/material/Card';
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 import CircularProgress from '@mui/material/CircularProgress';
 import AlertError from '@/app/components/AlertError'
 import AlertSuccess from '@/app/components/AlertSuccess'
@@ -49,6 +52,43 @@ const colors = [200, 300, 400, 500, 600, 700, 800]
 const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.length) return null // reached the end
     return `/users?page=${pageIndex}&take=10`                    // SWR key
+}
+
+function MediaCard({ url_img, name, description, id }) {
+    return (
+        <Card sx={{ padding: 2, margin: 2 }}>
+            <Grid container spacing={2}>
+                <Grid item xs={4}>
+                    <CardMedia
+                        sx={{ height: 140 }}
+                        image={url_img}
+                        title={name}
+                    />
+                </Grid>
+                <Grid item xs={8}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {name}
+                        </Typography>
+
+                        <Typography variant="body2" color="text.secondary">
+                            {description}
+                        </Typography>
+                    </CardContent>
+
+
+                    <CardActions>
+                        <Button size="small">Edit</Button>
+                        <Button size="small">Delete</Button>
+                    </CardActions>
+
+
+                </Grid>
+
+
+            </Grid>
+        </Card>
+    );
 }
 
 export default function Page() {
@@ -83,6 +123,7 @@ export default function Page() {
     }
 
     const { data: dataPemilik, isLoading } = useSWR('/api/my', fetcher)
+    const { data: dataKos, isLoading: isLoadingKos } = useSWR('/api/kos', fetcher)
 
 
     const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -99,17 +140,13 @@ export default function Page() {
         const response = await axios.post('/api/kos', data)
         if (response.status == 200) {
             localStorage.setItem('successNotif', 'success menambahkan data')
-            // router.prefetch()
             window.location.reload()
-            // setFinished(false)
-            // setOpenSuccess(true)
 
         } else {
             setOpen(true)
             setError('gagal Menambahkan data')
         }
 
-        // console.log(data)
     }
 
     const DataKos = () => isLoading ? <Stack justifyContent={'center'} alignItems={'center'}>
@@ -124,7 +161,19 @@ export default function Page() {
                     !openCreateKos ?
                         <>
                             <Stack my={3} >
-                                <Button onClick={() => setOpenCreateKos(!openCreateKos)} sx={{ width: 200 }} variant="contained">Tambahkan kos</Button>
+                                <Stack direction="row" justifyContent="flex-end">
+                                    <Button onClick={() => setOpenCreateKos(!openCreateKos)} sx={{ width: 200 }} variant="contained">Tambahkan kos</Button>
+                                </Stack>
+                                <Stack>
+                                    {
+                                        isLoadingKos ? <Stack justifyContent={'center'} alignItems={'center'}>
+                                            <CircularProgress />
+                                        </Stack> : dataKos.map(kos => (
+                                            <MediaCard key={kos.id} id={kos.id} name={kos.name_kos} description={kos.description} url_img={kos.url_img} />
+                                        ))
+                                    }
+
+                                </Stack>
                             </Stack>
                         </>
                         :

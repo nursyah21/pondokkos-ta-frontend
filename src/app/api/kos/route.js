@@ -27,6 +27,22 @@ async function getUserData(email) {
     return exists
 }
 
+export async function GET(request) {
+    const session = await getServerSession(authOptions);
+    const { nextUrl } = request
+    let data = null
+    if (session?.user) {
+        data = await getUserData(session.user?.email)
+        let id = data.id
+        let res = await prisma.kos.findMany({
+            where: { id_pemilik: id }
+        })
+        return NextResponse.json(res)
+
+    }
+    return NextResponse.json({ error: '404 unathorized' })
+}
+
 export async function POST(request) {
     const session = await getServerSession(authOptions);
     const { nextUrl } = request
@@ -38,17 +54,14 @@ export async function POST(request) {
         if (!page) page = 1
 
         data = await getUserData(session.user?.email)
-        console.log(data.id_role)
-        if (data.id_role == 2 ) return NextResponse.json({ error: '404 unathorized' })
-        console.log('process')
+
+        if (data.id_role == 2) return NextResponse.json({ error: '404 unathorized' })
+
         try {
             const dataKos = await request.json();
-            // console.log(dataKos)
-            // return NextResponse.json(dataKos);
             const kos = await prisma.kos.create({
                 data: dataKos
             });
-            console.log('adsda',kos)
             return NextResponse.json(kos);
         } catch (error) {
             console.log(error)
