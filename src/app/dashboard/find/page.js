@@ -1,7 +1,7 @@
 "use client"
 
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Container from '@mui/material/Container';
@@ -100,12 +100,13 @@ function MediaCard({ url_img, name, description, id, address }) {
 
 export default function Page() {
     const [error, setError] = useState('')
+    const search = useRef()
     const [open, setOpen] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
     const [openCreateKos, setOpenCreateKos] = useState(false)
     const [dataResult, setDataResult] = useState(null)
     const [loadingResult, setLoadingResult] = useState(false)
-    // const [dataResult, setDataResult] = useState([])
+
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 10,
         page: 1,
@@ -127,35 +128,33 @@ export default function Page() {
             data = await getBase64(newFile)
         }
         setFileBase64(data)
-
         setFile(newFile)
     }
 
     const { data, isLoading } = useSWR('/api/find', fetcher)
+
     const { register, watch, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-    // const { data: dataKos, isLoading: isLoadingKos } = useSWR('/api/kos', fetcher)
+    const onSubmit = async (data, e) => {
+        e.preventDefault()
+        const response = await axios.get(`/api/find?q=${data.q}`)
+        setLoadingResult(true)
+        setDataResult(null)
+        if (response.status == 200) {
+            setDataResult(response.data)
+        } else {
+            setDataResult(null)
+        }
 
-    const SearchBar = () => {
-        const handleSubmit = async (event) => {
-            if (event.key === 'Enter') {
-                setLoadingResult(true)
-                const response = await axios.get(`/api/find?q=${watch('searchbar')}`)
+        setLoadingResult(false)
 
-                if (response.status == 200) {
-                    setDataResult(response.data)
-                } else {
-                    setDataResult(null)
-                }
-                setLoadingResult(false)
-            }
-        };
-
-        return (
+    };
+    const SearchBar = () =>
+        <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
                 type="text"
                 placeholder="tulis nama kos"
-                onKeyDown={handleSubmit}
-                {...register('searchbar')}
+
+                {...register('q')}
                 fullWidth
                 InputProps={{
                     startAdornment: (
@@ -165,30 +164,8 @@ export default function Page() {
                     ),
                 }}
             />
-        );
-    }
+        </form>
 
-
-    
-    const onSubmit = async (data, e) => {
-        e.preventDefault()
-        if (!fileBase64) {
-            setError('tidak terdapat gambar kos')
-            setOpen(true)
-            return
-        }
-        data['url_img'] = fileBase64
-        data['id_pemilik'] = dataPemilik?.id
-
-        const response = await axios.post('/api/kos', data)
-        if (response.status == 200) {
-            localStorage.setItem('successNotif', 'success menambahkan data')
-            window.location.reload()
-        } else {
-            setOpen(true)
-            setError('gagal Menambahkan data')
-        }
-    }
 
 
     const DataKos = () =>
@@ -199,12 +176,13 @@ export default function Page() {
                 <Divider mb={3} />
                 <Stack my={2} gap={2}>
                     <SearchBar />
+                    {/* {console.log(dataResult)} */}
                     {(isLoading || loadingResult) ?
                         <Stack justifyContent={'center'} alignItems={'center'}>
                             <CircularProgress />
                         </Stack> :
                         dataResult ?
-                            dataResult?.map(e => (
+                            dataResult.map(e => (
                                 <MediaCard key={e.id} url_img={e.url_img} name={e.name_kos} description={e.address} id={e.id} address={e.address} />
                             )) :
                             data.res?.map(e => (
